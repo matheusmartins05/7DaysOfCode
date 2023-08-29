@@ -29,14 +29,15 @@ main{
 
 h1 {
     font-family: 'Kumbh Sans', sans-serif;
+    font-size: 3.6rem;
     color: #fff;
 
 }
 
 .campoPesquisa{
     background-color: #ffffff2e;
-    width: 35%;
-    height: 4rem;
+    width: 45%;
+    height: 5rem;
     border-radius: 0.8rem;
     border: none;
     text-indent: 2rem;
@@ -59,6 +60,7 @@ textarea:focus, input:focus, select:focus {
     gap: 0.5rem;
     color: #fff;
     font-family: 'Kumbh Sans', sans-serif;
+    font-size: 1.8rem;
 }
 
 
