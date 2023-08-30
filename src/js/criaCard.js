@@ -1,14 +1,16 @@
+import { discoverFilm } from "./conectaApi.js";
 const $main = document.querySelector("main");
 
-function loadCard() {
-  const sectionCard = document.createElement("section");
-  sectionCard.innerHTML = `<div class="card">
+function loadCard(image, title, average, overview) {
+
+  const section = document.createElement("section");
+  section.innerHTML = `<div class="card">
 <figure>
-    <img src="./src/image/filmeVingadores.png" alt="Filme Vingadores">
+    <img src="https://image.tmdb.org/t/p/w200/${image}">
 </figure>
 
 <div class="infosFilme">
-    <p class="nomeFilme"> Avengers Endgame (2019) </p>
+    <p class="nomeFilme"> ${title} </p>
 
     <div class="classificacao">
         <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -16,7 +18,7 @@ function loadCard() {
             d="M10 0L13.09 6.26L20 7.27L15 12.14L16.18 19.02L10 15.77L3.82 19.02L5 12.14L0 7.27L6.91 6.26L10 0Z"
             fill="#D7A82F" />
         </svg>
-        <p>9.2</p>
+        <p>${average}</p>
     </div>
 
  <div class="favoritar">
@@ -29,12 +31,31 @@ function loadCard() {
     </div>
 </div>
 
-<div class="resumoFilme">
-    Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
-</div>
+<div class="resumoFilme">${overview}</div>
     </div>`;
 
-  $main.appendChild(sectionCard);
+
+    $main.appendChild(section);
 }
 
-export {loadCard};
+
+async function addInfosCard() {
+  const infosFilm = await discoverFilm();
+
+  infosFilm.forEach((element) => {
+    $main.appendChild(
+      loadCard(
+        element.poster_path,
+        element.title,
+        element.vote_average,
+        element.overview
+      )
+    );
+  });
+}
+
+addInfosCard();
+
+addInfosCard();
+
+export { loadCard };
