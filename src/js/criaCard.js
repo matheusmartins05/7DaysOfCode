@@ -1,10 +1,10 @@
 import { discoverFilm } from "./conectaApi.js";
-const $main = document.querySelector("main");
+const listaFilmes = document.querySelector("[data-listaFilmes]");
+console.log(listaFilmes);
 
 function loadCard(image, title, average, overview) {
-
-  const section = document.createElement("section");
-  section.innerHTML = `<div class="card">
+  const lista = document.createElement("li");
+  lista.innerHTML = `<div class="card">
 <figure>
     <img src="https://image.tmdb.org/t/p/w200/${image}">
 </figure>
@@ -34,16 +34,14 @@ function loadCard(image, title, average, overview) {
 <div class="resumoFilme">${overview}</div>
     </div>`;
 
-
-    $main.appendChild(section);
+  return lista;
 }
-
 
 async function addInfosCard() {
   const infosFilm = await discoverFilm();
 
   infosFilm.forEach((element) => {
-    $main.appendChild(
+    listaFilmes.appendChild(
       loadCard(
         element.poster_path,
         element.title,
