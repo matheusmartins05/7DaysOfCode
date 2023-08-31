@@ -1,4 +1,4 @@
-import { descobrirFilme } from "./conectaApi.js";
+import { descobrirFilme, pesquisarFilmeDigitado } from "./conectaApi.js";
 const listaFilmes = document.querySelector("[data-listaFilmes]");
 const campoPesquisa = document.querySelector("[data-input]");
 
@@ -57,7 +57,34 @@ async function addInfosCard() {
 
 
 
+const input = document.querySelector("[data-input]");
+const btnBuscar = document.querySelector("[data-btnSearch]");
+
+
+
+
+async function trazResultadoPesquisa (){
+  
+    btnBuscar.addEventListener("click", async () =>{
+      const valorDigitado = input.value;
+     
+      if (valorDigitado == '') {
+        console.log('Você é burro?')
+      }else{
+        listaFilmes.innerHTML = '';
+        const resultadoBusca = await pesquisarFilmeDigitado(valorDigitado);
+
+        resultadoBusca.forEach(element => {
+          listaFilmes.appendChild(carregarCards( element.poster_path, element.title, element.vote_average, element.overview));
+        });
+
+      }
+    })
+
+    
+}
+
+
 addInfosCard();
-
-
+trazResultadoPesquisa();
 
