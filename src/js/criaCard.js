@@ -1,13 +1,12 @@
 import { descobrirFilme, pesquisarFilmeDigitado } from "./conectaApi.js";
 const listaFilmes = document.querySelector("[data-listaFilmes]");
 const campoPesquisa = document.querySelector("[data-input]");
-
-
-
+const input = document.querySelector("[data-input]");
+const btnBuscar = document.querySelector("[data-btnSearch]");
 
 function carregarCards(image, title, average, overview) {
   const lista = document.createElement("div");
-  lista.classList.add('card')
+  lista.classList.add("card");
   lista.innerHTML = `
 <figure>
     <img src="https://image.tmdb.org/t/p/w200/${image}">
@@ -35,7 +34,7 @@ function carregarCards(image, title, average, overview) {
     </div>
 </div>
 
-<div class="resumoFilme">${overview}</div>`
+<div class="resumoFilme">${overview}</div>`;
 
   return lista;
 }
@@ -56,35 +55,32 @@ async function addInfosCard() {
 }
 
 
+async function trazResultadoPesquisa() {
 
-const input = document.querySelector("[data-input]");
-const btnBuscar = document.querySelector("[data-btnSearch]");
+  input.addEventListener("click", limparSecaoFilmesAoDigitar)
 
+  btnBuscar.addEventListener("click", async () => {
+    const valorDigitado = input.value;
+    listaFilmes.innerHTML = "";
+    const resultadoBusca = await pesquisarFilmeDigitado(valorDigitado);
 
-
-
-async function trazResultadoPesquisa (){
-  
-    btnBuscar.addEventListener("click", async () =>{
-      const valorDigitado = input.value;
-     
-      if (valorDigitado == '') {
-        console.log('Você é burro?')
-      }else{
-        listaFilmes.innerHTML = '';
-        const resultadoBusca = await pesquisarFilmeDigitado(valorDigitado);
-
-        resultadoBusca.forEach(element => {
-          listaFilmes.appendChild(carregarCards( element.poster_path, element.title, element.vote_average, element.overview));
-        });
-
-      }
-    })
-
-    
+    resultadoBusca.forEach((element) => {
+      listaFilmes.appendChild(
+        carregarCards(
+          element.poster_path,
+          element.title,
+          element.vote_average,
+          element.overview
+        )
+      );
+    });
+  });
 }
 
 
+function limparSecaoFilmesAoDigitar(){
+  listaFilmes.innerHTML = '';
+}
+
 addInfosCard();
 trazResultadoPesquisa();
-
