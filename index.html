@@ -16,8 +16,8 @@
         <form action="">
 
             <div class="input-container">
-                <input class="campoPesquisa" type="text" placeholder="Digite algum filme para pesquisar...">
-                <img src="./src/image/search-icon.svg" alt="Ícone de pesquisa" class="searchIcon">
+                <input class="campoPesquisa" type="text" placeholder="Digite algum filme para pesquisar..." data-input>
+                <img src="./src/image/search-icon.svg" alt="Ícone de pesquisa" class="searchIcon" data-btnSearch>
             </div>
 
             <div class="favoritarFilme">
@@ -25,9 +25,8 @@
                 <p>Mostrar meus filmes favoritos apenas</p>
             </div>
 
-           <ul class="ulFilmes" data-listaFilmes>
-
-           </ul> 
+           <div class="ulFilmes" data-listaFilmes>
+           </div> 
         </form>
 
 
@@ -37,6 +36,8 @@
     <script type="module" src="./src/js/keyApi.js"></script>
     <script type="module" src="./src/js/conectaApi.js"></script>
     <script type="module" src="./src/js/criaCard.js"></script>
+
+
 
 </body>
 

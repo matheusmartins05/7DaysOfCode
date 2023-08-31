@@ -1,10 +1,14 @@
-import { discoverFilm } from "./conectaApi.js";
+import { descobrirFilme } from "./conectaApi.js";
 const listaFilmes = document.querySelector("[data-listaFilmes]");
-console.log(listaFilmes);
+const campoPesquisa = document.querySelector("[data-input]");
 
-function loadCard(image, title, average, overview) {
-  const lista = document.createElement("li");
-  lista.innerHTML = `<div class="card">
+
+
+
+function carregarCards(image, title, average, overview) {
+  const lista = document.createElement("div");
+  lista.classList.add('card')
+  lista.innerHTML = `
 <figure>
     <img src="https://image.tmdb.org/t/p/w200/${image}">
 </figure>
@@ -31,18 +35,17 @@ function loadCard(image, title, average, overview) {
     </div>
 </div>
 
-<div class="resumoFilme">${overview}</div>
-    </div>`;
+<div class="resumoFilme">${overview}</div>`
 
   return lista;
 }
 
 async function addInfosCard() {
-  const infosFilm = await discoverFilm();
+  const infosFilm = await descobrirFilme();
 
   infosFilm.forEach((element) => {
     listaFilmes.appendChild(
-      loadCard(
+      carregarCards(
         element.poster_path,
         element.title,
         element.vote_average,
@@ -52,8 +55,9 @@ async function addInfosCard() {
   });
 }
 
-addInfosCard();
+
 
 addInfosCard();
 
-export { loadCard };
+
+
