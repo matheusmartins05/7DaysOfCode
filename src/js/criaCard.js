@@ -84,18 +84,19 @@ function limparSecaoFilmesAoDigitar(){
   listaFilmes.innerHTML = '';
 }
 
-function mudaImagemAoFavoritar (nomeFilme){
+function adicionaFavoritadoAoLocalStorage (){
   const coracao = document.querySelectorAll("[data-favoritar]");
   coracao.forEach(element => {
     element.addEventListener("click", function(e){
-      const primeiroTeste = e.target.parentNode.parentElement.firstElementChild.innerText;
-      console.log(primeiroTeste)
+
       if (e.target.src == 'http://127.0.0.1:5500/src/image/coracaoVazio.svg') {
         e.target.src = './src/image/coracaoPreenchido.svg'
       }else{
         e.target.src = './src/image/coracaoVazio.svg'
       }
 
+      
+      localStorage.setItem(element.id, JSON.stringify(achaInfosDoFilmeFavoritado(e)));
 
     })
   })
@@ -103,23 +104,15 @@ function mudaImagemAoFavoritar (nomeFilme){
 
 }
 
-// LOCALSTORAGE
+function achaInfosDoFilmeFavoritado (e){
+  const imagemFavoritado = e.target.parentNode.parentNode.parentNode.children[0].children[0].currentSrc;
+  const nomeFilmeFavoritado = e.target.parentNode.parentElement.children[0].textContent;
+  const notaFavoritado = e.target.parentNode.parentElement.children[1].innerText;
+  const resumoFavoritado = e.target.parentNode.parentNode.nextElementSibling.textContent   
+  const todasInfos = [imagemFavoritado, nomeFilmeFavoritado, notaFavoritado, resumoFavoritado]
 
-async function adicionaLocalStorage (){
-  const filmesTeste = await descobrirFilme();
-  filmesTeste.forEach(element => {
-    const infosFilmeFavoritado = []
-
-    infosFilmeFavoritado.push(element.poster_path, element.title, element.vote_average, element.overview)
-
-    localStorage.setItem(element.id, JSON.stringify(infosFilmeFavoritado));
-
-
-  });
- 
-  // const arr = [1,2,3];
-  // salvar dados
- // localStorage.setItem("myCat", "Tom");
+  console.log (todasInfos);
+  return todasInfos;
 }
 
 
@@ -127,7 +120,7 @@ async function adicionaLocalStorage (){
 window.addEventListener("load", () =>{
   trazResultadoPesquisa();
   addInfosCard()
-  adicionaLocalStorage ()
+  adicionaFavoritadoAoLocalStorage ()
 })
 
 
