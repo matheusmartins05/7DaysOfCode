@@ -3,7 +3,8 @@ const listaFilmes = document.querySelector("[data-listaFilmes]");
 const input = document.querySelector("[data-input]");
 const btnBuscar = document.querySelector("[data-btnSearch]");
 
-function carregarCards(image, title, average, overview, imagemFavorito) {
+// esqueleto dos cards
+function carregarCards(image, title, average, overview) {
   const lista = document.createElement("div");
   lista.classList.add("card");
   lista.innerHTML = `
@@ -34,37 +35,19 @@ function carregarCards(image, title, average, overview, imagemFavorito) {
   return lista;
 }
 
+
+// adiciona informações aos cards
 async function addInfosCard() {
   const infosFilm = await descobrirFilme();
 
   infosFilm.forEach((element) => {
-    listaFilmes.appendChild(carregarCards(element.poster_path, element.title, element.vote_average, element.overview)
-    
-    );
-
- 
+    listaFilmes.appendChild(carregarCards(element.poster_path, element.title, element.vote_average, element.overview));
   });
 
-  const teste = document.querySelector("[data-favoritar]");
-
-  teste.addEventListener("click", function(e){
-  if (e.target.src == 'http://127.0.0.1:5500/src/image/coracaoVazio.svg') {
-     e.target.src = 'http://127.0.0.1:5500/src/image/coracaoPreenchido.svg'
-
-  }else{
-    e.target.src = 'http://127.0.0.1:5500/src/image/coracaoVazio.svg'
-  }
-
-  })
+  mudaImagemAoFavoritar ();
 
 
 }
-
-
-
-
-
-
 
 async function trazResultadoPesquisa() {
 
@@ -86,18 +69,65 @@ async function trazResultadoPesquisa() {
       );
     });
   });
+
 }
 
 
+
+
+
+
+// funções menores
 
 
 function limparSecaoFilmesAoDigitar(){
   listaFilmes.innerHTML = '';
 }
 
+function mudaImagemAoFavoritar (nomeFilme){
+  const coracao = document.querySelectorAll("[data-favoritar]");
+  coracao.forEach(element => {
+    element.addEventListener("click", function(e){
+      const primeiroTeste = e.target.parentNode.parentElement.firstElementChild.innerText;
+      console.log(primeiroTeste)
+      if (e.target.src == 'http://127.0.0.1:5500/src/image/coracaoVazio.svg') {
+        e.target.src = './src/image/coracaoPreenchido.svg'
+      }else{
+        e.target.src = './src/image/coracaoVazio.svg'
+      }
+
+
+    })
+  })
+
+
+}
+
+// LOCALSTORAGE
+
+async function adicionaLocalStorage (){
+  const filmesTeste = await descobrirFilme();
+  filmesTeste.forEach(element => {
+    const infosFilmeFavoritado = []
+
+    infosFilmeFavoritado.push(element.poster_path, element.title, element.vote_average, element.overview)
+
+    localStorage.setItem(element.id, JSON.stringify(infosFilmeFavoritado));
+
+
+  });
+ 
+  // const arr = [1,2,3];
+  // salvar dados
+ // localStorage.setItem("myCat", "Tom");
+}
+
+
+
 window.addEventListener("load", () =>{
-  addInfosCard();
   trazResultadoPesquisa();
+  addInfosCard()
+  adicionaLocalStorage ()
 })
 
 
