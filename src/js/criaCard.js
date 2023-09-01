@@ -4,7 +4,7 @@ const input = document.querySelector("[data-input]");
 const btnBuscar = document.querySelector("[data-btnSearch]");
 
 // esqueleto dos cards
-function carregarCards(image, title, average, overview) {
+function carregarCards(image, title, average, overview, idFilme) {
   const lista = document.createElement("div");
   lista.classList.add("card");
   lista.innerHTML = `
@@ -12,7 +12,7 @@ function carregarCards(image, title, average, overview) {
     <img src="https://image.tmdb.org/t/p/w200/${image}">
 </figure>
 
-<div class="infosFilme">
+<div class="infosFilme" id="${idFilme}">
     <p class="nomeFilme"> ${title} </p>
 
     <div class="classificacao">
@@ -41,12 +41,13 @@ async function addInfosCard() {
   const infosFilm = await descobrirFilme();
 
   infosFilm.forEach((element) => {
-    listaFilmes.appendChild(carregarCards(element.poster_path, element.title, element.vote_average, element.overview));
+    listaFilmes.appendChild(carregarCards(element.poster_path, element.title, element.vote_average, element.overview, element.id));
+
+
   });
 
-  mudaImagemAoFavoritar ();
-
-
+    adicionaFavoritadoAoLocalStorage ()
+  
 }
 
 async function trazResultadoPesquisa() {
@@ -84,7 +85,7 @@ function limparSecaoFilmesAoDigitar(){
   listaFilmes.innerHTML = '';
 }
 
-function adicionaFavoritadoAoLocalStorage (){
+function adicionaFavoritadoAoLocalStorage (id){
   const coracao = document.querySelectorAll("[data-favoritar]");
   coracao.forEach(element => {
     element.addEventListener("click", function(e){
@@ -96,7 +97,7 @@ function adicionaFavoritadoAoLocalStorage (){
       }
 
       
-      localStorage.setItem(element.id, JSON.stringify(achaInfosDoFilmeFavoritado(e)));
+      localStorage.setItem( achaInfosDoFilmeFavoritado(e) , "teste");
 
     })
   })
@@ -108,11 +109,11 @@ function achaInfosDoFilmeFavoritado (e){
   const imagemFavoritado = e.target.parentNode.parentNode.parentNode.children[0].children[0].currentSrc;
   const nomeFilmeFavoritado = e.target.parentNode.parentElement.children[0].textContent;
   const notaFavoritado = e.target.parentNode.parentElement.children[1].innerText;
-  const resumoFavoritado = e.target.parentNode.parentNode.nextElementSibling.textContent   
+  const resumoFavoritado = e.target.parentNode.parentNode.nextElementSibling.textContent;
+  const id = e.target.parentNode.parentNode.attributes[1].textContent;
   const todasInfos = [imagemFavoritado, nomeFilmeFavoritado, notaFavoritado, resumoFavoritado]
 
-  console.log (todasInfos);
-  return todasInfos;
+  return id
 }
 
 
@@ -120,7 +121,7 @@ function achaInfosDoFilmeFavoritado (e){
 window.addEventListener("load", () =>{
   trazResultadoPesquisa();
   addInfosCard()
-  adicionaFavoritadoAoLocalStorage ()
+
 })
 
 
