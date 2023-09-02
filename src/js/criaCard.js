@@ -46,7 +46,7 @@ async function addInfosCard() {
 
   });
 
-    adicionaFavoritadoAoLocalStorage ()
+  adicionarRemoverFavoritadoAoLocalStorage ()
   
 }
 
@@ -85,19 +85,26 @@ function limparSecaoFilmesAoDigitar(){
   listaFilmes.innerHTML = '';
 }
 
-function adicionaFavoritadoAoLocalStorage (id){
+function adicionarRemoverFavoritadoAoLocalStorage (){
   const coracao = document.querySelectorAll("[data-favoritar]");
   coracao.forEach(element => {
     element.addEventListener("click", function(e){
 
       if (e.target.src == 'http://127.0.0.1:5500/src/image/coracaoVazio.svg') {
         e.target.src = './src/image/coracaoPreenchido.svg'
+        const infosLocalStorage = achaInfosDoFilmeFavoritado(e);
+        console.log(infosLocalStorage);
+        
+        localStorage.setItem( infosLocalStorage[0] , infosLocalStorage[1]);
       }else{
         e.target.src = './src/image/coracaoVazio.svg'
+        const infosLocalStorage = achaInfosDoFilmeFavoritado(e);
+        console.log(infosLocalStorage);
+        
+        localStorage.removeItem( infosLocalStorage[0] , infosLocalStorage[1]);
       }
 
-      
-      localStorage.setItem( achaInfosDoFilmeFavoritado(e) , "teste");
+     
 
     })
   })
@@ -111,9 +118,9 @@ function achaInfosDoFilmeFavoritado (e){
   const notaFavoritado = e.target.parentNode.parentElement.children[1].innerText;
   const resumoFavoritado = e.target.parentNode.parentNode.nextElementSibling.textContent;
   const id = e.target.parentNode.parentNode.attributes[1].textContent;
-  const todasInfos = [imagemFavoritado, nomeFilmeFavoritado, notaFavoritado, resumoFavoritado]
+  const todasInfos = [imagemFavoritado, nomeFilmeFavoritado, notaFavoritado, resumoFavoritado];
 
-  return id
+  return [id, todasInfos];
 }
 
 
