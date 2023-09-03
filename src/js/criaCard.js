@@ -3,6 +3,8 @@ const listaFilmes = document.querySelector("[data-listaFilmes]");
 const input = document.querySelector("[data-input]");
 const btnBuscar = document.querySelector("[data-btnSearch]");
 
+const favoritados = localStorage.getItem("favoritados") || [];
+
 // esqueleto dos cards
 function carregarCards(image, title, average, overview, idFilme) {
   const lista = document.createElement("div");
@@ -93,15 +95,24 @@ function adicionarRemoverFavoritadoAoLocalStorage (){
       if (e.target.src == 'http://127.0.0.1:5500/src/image/coracaoVazio.svg') {
         e.target.src = './src/image/coracaoPreenchido.svg'
         const infosLocalStorage = achaInfosDoFilmeFavoritado(e);
-        console.log(infosLocalStorage);
         
-        localStorage.setItem( infosLocalStorage[0] , infosLocalStorage[1]);
+        const teste = {
+          "img": infosLocalStorage[0],
+          "titulo": infosLocalStorage[1],
+          "nota": infosLocalStorage[2],
+          "resumo": infosLocalStorage[3],
+          "id": infosLocalStorage[4],
+        }
+
+        favoritados.push(teste);
+
+
+        localStorage.setItem("favoritados", JSON.stringify(favoritados));
+
+
       }else{
         e.target.src = './src/image/coracaoVazio.svg'
-        const infosLocalStorage = achaInfosDoFilmeFavoritado(e);
-        console.log(infosLocalStorage);
-        
-        localStorage.removeItem( infosLocalStorage[0] , infosLocalStorage[1]);
+
       }
 
      
@@ -118,9 +129,9 @@ function achaInfosDoFilmeFavoritado (e){
   const notaFavoritado = e.target.parentNode.parentElement.children[1].innerText;
   const resumoFavoritado = e.target.parentNode.parentNode.nextElementSibling.textContent;
   const id = e.target.parentNode.parentNode.attributes[1].textContent;
-  const todasInfos = [imagemFavoritado, nomeFilmeFavoritado, notaFavoritado, resumoFavoritado];
+  const todasInfos = [imagemFavoritado, nomeFilmeFavoritado, notaFavoritado, resumoFavoritado, id];
 
-  return [id, todasInfos];
+  return todasInfos;
 }
 
 
