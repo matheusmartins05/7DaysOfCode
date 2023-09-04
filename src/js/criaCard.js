@@ -2,6 +2,7 @@ import { descobrirFilme, pesquisarFilmeDigitado } from "./conectaApi.js";
 const listaFilmes = document.querySelector("[data-listaFilmes]");
 const input = document.querySelector("[data-input]");
 const btnBuscar = document.querySelector("[data-btnSearch]");
+const mostraFavoritados = document.querySelector("#filmesFavoritos")
 const favoritados = JSON.parse(localStorage.getItem("favoritados")) || [];
 
 // esqueleto dos cards
@@ -78,6 +79,31 @@ async function filmesPorBusca() {
 }
 
 
+function filmesFavoritados(){
+
+  favoritados.forEach(element => {
+    listaFilmes.appendChild(cardFilme(element.img, element.titulo, element.nota, element.resumo, element.id))
+  });
+  favoritaoOuNao()
+  adicionaRemoveLocalStorage();
+}
+
+
+function mostraListaDeFavoritos(){
+  mostraFavoritados.addEventListener("click", function(){
+    if(mostraFavoritados.checked){
+
+      limparSecaoFilmesAoDigitar()
+      filmesFavoritados()
+    }else{
+      limparSecaoFilmesAoDigitar()
+      filmesPopulares()
+    }
+  })
+}
+
+mostraListaDeFavoritos()
+
 
 async function pesquisarFilme() {
 
@@ -99,6 +125,8 @@ async function pesquisarFilme() {
   btnBuscar.addEventListener("click",  filmesPorBusca)
 
 }
+
+
 
 // funções menores
 
