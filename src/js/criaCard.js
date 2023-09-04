@@ -2,7 +2,6 @@ import { descobrirFilme, pesquisarFilmeDigitado } from "./conectaApi.js";
 const listaFilmes = document.querySelector("[data-listaFilmes]");
 const input = document.querySelector("[data-input]");
 const btnBuscar = document.querySelector("[data-btnSearch]");
-
 const favoritados = localStorage.getItem("favoritados") || [];
 
 // esqueleto dos cards
@@ -37,24 +36,26 @@ function carregarCards(image, title, average, overview, idFilme) {
   return lista;
 }
 
-
 // adiciona informações aos cards
 async function addInfosCard() {
   const infosFilm = await descobrirFilme();
 
   infosFilm.forEach((element) => {
-    listaFilmes.appendChild(carregarCards(element.poster_path, element.title, element.vote_average, element.overview, element.id));
-
-
+    listaFilmes.appendChild(
+      carregarCards(
+        element.poster_path,
+        element.title,
+        element.vote_average,
+        element.overview,
+        element.id
+      )
+    );
   });
-
-  adicionarRemoverFavoritadoAoLocalStorage ()
-  
+  filmeFavoritadoOuNao();
 }
 
 async function trazResultadoPesquisa() {
-
-  input.addEventListener("click", limparSecaoFilmesAoDigitar)
+  input.addEventListener("click", limparSecaoFilmesAoDigitar);
 
   btnBuscar.addEventListener("click", async () => {
     const valorDigitado = input.value;
@@ -72,78 +73,74 @@ async function trazResultadoPesquisa() {
       );
     });
   });
-
 }
-
-
-
-
-
 
 // funções menores
 
-
-function limparSecaoFilmesAoDigitar(){
-  listaFilmes.innerHTML = '';
+function limparSecaoFilmesAoDigitar() {
+  listaFilmes.innerHTML = "";
 }
 
-function adicionarRemoverFavoritadoAoLocalStorage (){
+function filmeFavoritadoOuNao() {
   const coracao = document.querySelectorAll("[data-favoritar]");
-  coracao.forEach(element => {
-    element.addEventListener("click", function(e){
+  coracao.forEach((element) => {
+    element.addEventListener("click", function (e) {
+      const infosLocalStorage = achaInfosDoFilmeFavoritado(e);
+      const informacoesFilmeFavoritado = {
+        id: infosLocalStorage[4],
+        titulo: infosLocalStorage[1],
+        nota: infosLocalStorage[2],
+        resumo: infosLocalStorage[3],
+        img: infosLocalStorage[0],
+      };
 
-      if (e.target.src == 'http://127.0.0.1:5500/src/image/coracaoVazio.svg') {
-        e.target.src = './src/image/coracaoPreenchido.svg'
-        const infosLocalStorage = achaInfosDoFilmeFavoritado(e);
-        
-        const teste = {
-          "img": infosLocalStorage[0],
-          "titulo": infosLocalStorage[1],
-          "nota": infosLocalStorage[2],
-          "resumo": infosLocalStorage[3],
-          "id": infosLocalStorage[4],
-        }
+      const existe = favoritados.find(
+        (element) => element.id === informacoesFilmeFavoritado.id
+      );
 
-        favoritados.push(teste);
-
-
+      
+      
+      if (existe) {
+        //remover do localStorage
+        favoritados.splice(favoritados.findIndex(element => element.id === informacoesFilmeFavoritado.id), 1)
         localStorage.setItem("favoritados", JSON.stringify(favoritados));
-
-
+        this.src = './src/image/coracaoVazio.svg'
       }else{
-        e.target.src = './src/image/coracaoVazio.svg'
+        favoritados.push(informacoesFilmeFavoritado)
+        localStorage.setItem("favoritados", JSON.stringify(favoritados));
+        this.src = './src/image/coracaoPreenchido.svg'
 
       }
 
-     
 
-    })
-  })
-
-
+      
+    });
+  });
 }
 
-function achaInfosDoFilmeFavoritado (e){
-  const imagemFavoritado = e.target.parentNode.parentNode.parentNode.children[0].children[0].currentSrc;
-  const nomeFilmeFavoritado = e.target.parentNode.parentElement.children[0].textContent;
-  const notaFavoritado = e.target.parentNode.parentElement.children[1].innerText;
-  const resumoFavoritado = e.target.parentNode.parentNode.nextElementSibling.textContent;
+function achaInfosDoFilmeFavoritado(e) {
+  const imagemFavoritado =
+    e.target.parentNode.parentNode.parentNode.children[0].children[0]
+      .currentSrc;
+  const nomeFilmeFavoritado =
+    e.target.parentNode.parentElement.children[0].textContent;
+  const notaFavoritado =
+    e.target.parentNode.parentElement.children[1].innerText;
+  const resumoFavoritado =
+    e.target.parentNode.parentNode.nextElementSibling.textContent;
   const id = e.target.parentNode.parentNode.attributes[1].textContent;
-  const todasInfos = [imagemFavoritado, nomeFilmeFavoritado, notaFavoritado, resumoFavoritado, id];
+  const todasInfos = [
+    imagemFavoritado,
+    nomeFilmeFavoritado,
+    notaFavoritado,
+    resumoFavoritado,
+    id,
+  ];
 
   return todasInfos;
 }
 
-
-
-window.addEventListener("load", () =>{
+window.addEventListener("load", () => {
   trazResultadoPesquisa();
-  addInfosCard()
-
-})
-
-
-
-
-
-
+  addInfosCard();
+});
