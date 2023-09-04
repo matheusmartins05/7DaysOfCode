@@ -5,7 +5,7 @@ const btnBuscar = document.querySelector("[data-btnSearch]");
 const favoritados = JSON.parse(localStorage.getItem("favoritados")) || [];
 
 // esqueleto dos cards
-function carregarCards(image, title, average, overview, idFilme) {
+function cardFilme(image, title, average, overview, idFilme) {
   const lista = document.createElement("div");
   lista.classList.add("card");
   lista.innerHTML = `
@@ -36,13 +36,13 @@ function carregarCards(image, title, average, overview, idFilme) {
   return lista;
 }
 
-// adiciona informações aos cards
-async function addInfosCard() {
+// section discover Api
+async function filmesPopulares() {
   const infosFilm = await descobrirFilme();
 
   infosFilm.forEach((element) => {
     listaFilmes.appendChild(
-      carregarCards(
+      cardFilme(
         element.poster_path,
         element.title,
         element.vote_average,
@@ -55,25 +55,49 @@ async function addInfosCard() {
   adicionaRemoveLocalStorage();
 }
 
-async function trazResultadoPesquisa() {
-  input.addEventListener("click", limparSecaoFilmesAoDigitar);
+//section search film Api
 
-  btnBuscar.addEventListener("click", async () => {
-    const valorDigitado = input.value;
-    listaFilmes.innerHTML = "";
-    const resultadoBusca = await pesquisarFilmeDigitado(valorDigitado);
+async function filmesPorBusca() {
+  const filmeBuscado = document.querySelector("[data-input]");
+  const resultadoBusca = await pesquisarFilmeDigitado(filmeBuscado.value);
 
-    resultadoBusca.forEach((element) => {
-      listaFilmes.appendChild(
-        carregarCards(
-          element.poster_path,
-          element.title,
-          element.vote_average,
-          element.overview
-        )
-      );
-    });
+  resultadoBusca.forEach((element) => {
+    listaFilmes.appendChild(
+      cardFilme(
+        element.poster_path,
+        element.title,
+        element.vote_average,
+        element.overview,
+        element.id
+      )
+    );
   });
+
+  favoritaoOuNao();
+  adicionaRemoveLocalStorage();
+}
+
+
+
+async function pesquisarFilme() {
+
+  input.addEventListener("keydown", function (e) {
+    if (input.value != '') {
+      limparSecaoFilmesAoDigitar();
+    }
+
+    if (e.key === "Enter" && input.value != '') {
+      e.preventDefault();
+      filmesPorBusca();
+    }
+
+    if (e.key === "Backspace" || e.key === "Delete") {
+      filmesPopulares();
+    }
+  });
+
+  btnBuscar.addEventListener("click",  filmesPorBusca)
+
 }
 
 // funções menores
@@ -147,19 +171,16 @@ function favoritaoOuNao() {
   coracao.forEach((element) => {
     element.addEventListener("load", function (e) {
       const teste = achaInfosDoFilmeFavoritado(e);
-      const existe = favoritados.find(
-        (element) => element.id === teste[4]
-      );
+      const existe = favoritados.find((element) => element.id === teste[4]);
 
-      if(existe){
-        e.target.src = './src/image/coracaoPreenchido.svg'
+      if (existe) {
+        e.target.src = "./src/image/coracaoPreenchido.svg";
       }
-
     });
   });
 }
 
 window.addEventListener("load", () => {
-  trazResultadoPesquisa();
-  addInfosCard();
+  pesquisarFilme();
+  filmesPopulares();
 });
