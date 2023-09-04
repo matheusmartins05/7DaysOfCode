@@ -142,6 +142,7 @@ function achaInfosDoFilmeFavoritado(e) {
 }
 
 function favoritaoOuNao() {
+  // verifica se o filme está favoritado no localStorage e adiciona a imagem de coração favoritado.
   const coracao = document.querySelectorAll("[data-favoritar]");
   coracao.forEach((element) => {
     element.addEventListener("load", function (e) {
