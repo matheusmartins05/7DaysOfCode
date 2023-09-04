@@ -4,7 +4,6 @@ const input = document.querySelector("[data-input]");
 const btnBuscar = document.querySelector("[data-btnSearch]");
 const favoritados = JSON.parse(localStorage.getItem("favoritados")) || [];
 
-
 // esqueleto dos cards
 function carregarCards(image, title, average, overview, idFilme) {
   const lista = document.createElement("div");
@@ -52,7 +51,8 @@ async function addInfosCard() {
       )
     );
   });
-  filmeFavoritadoOuNao();
+  favoritaoOuNao();
+  adicionaRemoveLocalStorage();
 }
 
 async function trazResultadoPesquisa() {
@@ -82,7 +82,7 @@ function limparSecaoFilmesAoDigitar() {
   listaFilmes.innerHTML = "";
 }
 
-function filmeFavoritadoOuNao() {
+function adicionaRemoveLocalStorage() {
   const coracao = document.querySelectorAll("[data-favoritar]");
   coracao.forEach((element) => {
     element.addEventListener("click", function (e) {
@@ -99,22 +99,22 @@ function filmeFavoritadoOuNao() {
         (element) => element.id === informacoesFilmeFavoritado.id
       );
 
-      
-      
       if (existe) {
         //remover do localStorage
-        favoritados.splice(favoritados.findIndex(element => element.id === informacoesFilmeFavoritado.id), 1)
+        favoritados.splice(
+          favoritados.findIndex(
+            (element) => element.id === informacoesFilmeFavoritado.id
+          ),
+          1
+        );
         localStorage.setItem("favoritados", JSON.stringify(favoritados));
-        this.src = './src/image/coracaoVazio.svg'
-      }else{
-        favoritados.push(informacoesFilmeFavoritado)
+        this.src = "./src/image/coracaoVazio.svg";
+      } else {
+        //adiciona ao localStorage
+        favoritados.push(informacoesFilmeFavoritado);
         localStorage.setItem("favoritados", JSON.stringify(favoritados));
-        this.src = './src/image/coracaoPreenchido.svg'
-
+        this.src = "./src/image/coracaoPreenchido.svg";
       }
-
-
-      
     });
   });
 }
@@ -139,6 +139,23 @@ function achaInfosDoFilmeFavoritado(e) {
   ];
 
   return todasInfos;
+}
+
+function favoritaoOuNao() {
+  const coracao = document.querySelectorAll("[data-favoritar]");
+  coracao.forEach((element) => {
+    element.addEventListener("load", function (e) {
+      const teste = achaInfosDoFilmeFavoritado(e);
+      const existe = favoritados.find(
+        (element) => element.id === teste[4]
+      );
+
+      if(existe){
+        e.target.src = './src/image/coracaoPreenchido.svg'
+      }
+
+    });
+  });
 }
 
 window.addEventListener("load", () => {
