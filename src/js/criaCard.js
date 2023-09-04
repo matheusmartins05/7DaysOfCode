@@ -2,7 +2,8 @@ import { descobrirFilme, pesquisarFilmeDigitado } from "./conectaApi.js";
 const listaFilmes = document.querySelector("[data-listaFilmes]");
 const input = document.querySelector("[data-input]");
 const btnBuscar = document.querySelector("[data-btnSearch]");
-const favoritados = localStorage.getItem("favoritados") || [];
+const favoritados = JSON.parse(localStorage.getItem("favoritados")) || [];
+
 
 // esqueleto dos cards
 function carregarCards(image, title, average, overview, idFilme) {
