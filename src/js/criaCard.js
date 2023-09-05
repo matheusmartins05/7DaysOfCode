@@ -1,7 +1,11 @@
 import { descobrirFilme, pesquisarFilmeDigitado } from "./conectaApi.js";
 const listaFilmes = document.querySelector("[data-listaFilmes]");
 const input = document.querySelector("[data-input]");
+const campoBusca = document.querySelector(".input-container");
 const btnBuscar = document.querySelector("[data-btnSearch]");
+const tituloPagina = document.querySelector(".tituloPagina")
+
+
 const mostraFavoritados = document.querySelector("#filmesFavoritos")
 const favoritados = JSON.parse(localStorage.getItem("favoritados")) || [];
 
@@ -94,9 +98,13 @@ function mostraListaDeFavoritos(){
     if(mostraFavoritados.checked){
 
       limparSecaoFilmesAoDigitar()
+      campoBusca.classList.add("naoExibeBarraPesquisa");
+      tituloPagina.innerText = 'Meus filmes favoritos'
       filmesFavoritados()
     }else{
       limparSecaoFilmesAoDigitar()
+      campoBusca.classList.remove("naoExibeBarraPesquisa");
+      tituloPagina.innerText = 'Filmes Populares'
       filmesPopulares()
     }
   })
@@ -207,6 +215,7 @@ function favoritaoOuNao() {
     });
   });
 }
+
 
 window.addEventListener("load", () => {
   pesquisarFilme();
