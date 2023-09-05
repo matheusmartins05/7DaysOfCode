@@ -95,14 +95,19 @@ function filmesFavoritados(){
 
 function mostraListaDeFavoritos(){
   mostraFavoritados.addEventListener("click", function(){
-    if(mostraFavoritados.checked){
+    if(mostraFavoritados.checked && favoritados.length != 0){
 
       limparSecaoFilmesAoDigitar()
       campoBusca.classList.add("naoExibeBarraPesquisa");
       tituloPagina.innerText = 'Meus filmes favoritos'
       filmesFavoritados()
+    } else if(mostraFavoritados.checked && favoritados.length == 0){
+      limparSecaoFilmesAoDigitar()
+      tituloPagina.innerText = 'Meus filmes favoritos'
+      listaFilmes.appendChild(favoritosVazio())
     }else{
       limparSecaoFilmesAoDigitar()
+      input.value = '';
       campoBusca.classList.remove("naoExibeBarraPesquisa");
       tituloPagina.innerText = 'Filmes Populares'
       filmesPopulares()
@@ -123,14 +128,17 @@ async function pesquisarFilme() {
     if (e.key === "Enter" && input.value != '') {
       e.preventDefault();
       filmesPorBusca();
+      mostraFavoritados.checked = false;
     }
 
     if (e.key === "Backspace" || e.key === "Delete") {
       filmesPopulares();
+      mostraFavoritados.checked = false;
     }
   });
 
   btnBuscar.addEventListener("click",  filmesPorBusca)
+
 
 }
 
@@ -214,6 +222,14 @@ function favoritaoOuNao() {
       }
     });
   });
+}
+
+function favoritosVazio(){
+  const aviso = document.createElement("div")
+  aviso.classList.add("hidden")
+
+  aviso.innerHTML = ` <p>Você não favoritou nenhum filme, use a barra de pesquisa para buscar o filme que deseja favoritar...</p>`;
+  return aviso;
 }
 
 

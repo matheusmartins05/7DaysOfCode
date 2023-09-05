@@ -83,6 +83,15 @@ select:focus {
 }
 
 
+.hidden{
+    margin: auto;
+    width: 50%;
+    color: #fff;
+    font-family: 'Kumbh Sans', sans-serif;
+    font-size: clamp(0.8rem, 1.5vw, 3rem);
+}
+
+
 
 
 .card {
