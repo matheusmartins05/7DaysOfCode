@@ -3,10 +3,9 @@ const listaFilmes = document.querySelector("[data-listaFilmes]");
 const input = document.querySelector("[data-input]");
 const campoBusca = document.querySelector(".input-container");
 const btnBuscar = document.querySelector("[data-btnSearch]");
-const tituloPagina = document.querySelector(".tituloPagina")
+const tituloPagina = document.querySelector(".tituloPagina");
 
-
-const mostraFavoritados = document.querySelector("#filmesFavoritos")
+const mostraFavoritados = document.querySelector("#filmesFavoritos");
 const favoritados = JSON.parse(localStorage.getItem("favoritados")) || [];
 
 // esqueleto dos cards
@@ -82,50 +81,50 @@ async function filmesPorBusca() {
   adicionaRemoveLocalStorage();
 }
 
-
-function filmesFavoritados(){
-
-  favoritados.forEach(element => {
-    listaFilmes.appendChild(cardFilme(element.img, element.titulo, element.nota, element.resumo, element.id))
+function filmesFavoritados() {
+  favoritados.forEach((element) => {
+    listaFilmes.appendChild(
+      cardFilme(
+        element.img,
+        element.titulo,
+        element.nota,
+        element.resumo,
+        element.id
+      )
+    );
   });
-  favoritaoOuNao()
+  favoritaoOuNao();
   adicionaRemoveLocalStorage();
 }
 
-
-function mostraListaDeFavoritos(){
-  mostraFavoritados.addEventListener("click", function(){
-    if(mostraFavoritados.checked && favoritados.length != 0){
-
-      limparSecaoFilmesAoDigitar()
+function mostraListaDeFavoritos() {
+  mostraFavoritados.addEventListener("click", function () {
+    if (mostraFavoritados.checked && favoritados.length != 0) {
+      limparSecaoFilmesAoDigitar();
       campoBusca.classList.add("naoExibeBarraPesquisa");
-      tituloPagina.innerText = 'Meus filmes favoritos'
-      filmesFavoritados()
-    } else if(mostraFavoritados.checked && favoritados.length == 0){
-      limparSecaoFilmesAoDigitar()
-      tituloPagina.innerText = 'Meus filmes favoritos'
-      listaFilmes.appendChild(favoritosVazio())
-    }else{
-      limparSecaoFilmesAoDigitar()
-      input.value = '';
+      tituloPagina.innerText = "Meus filmes favoritos";
+      filmesFavoritados();
+    } else if (mostraFavoritados.checked && favoritados.length == 0) {
+      limparSecaoFilmesAoDigitar();
+      tituloPagina.innerText = "Meus filmes favoritos";
+      listaFilmes.appendChild(favoritosVazio());
+    } else {
+      limparSecaoFilmesAoDigitar();
+      input.value = "";
       campoBusca.classList.remove("naoExibeBarraPesquisa");
-      tituloPagina.innerText = 'Filmes Populares'
-      filmesPopulares()
+      tituloPagina.innerText = "Filmes Populares";
+      filmesPopulares();
     }
-  })
+  });
 }
 
-mostraListaDeFavoritos()
-
-
 async function pesquisarFilme() {
-
   input.addEventListener("keydown", function (e) {
-    if (input.value != '') {
+    if (input.value != "") {
       limparSecaoFilmesAoDigitar();
     }
 
-    if (e.key === "Enter" && input.value != '') {
+    if (e.key === "Enter" && input.value != "") {
       e.preventDefault();
       filmesPorBusca();
       mostraFavoritados.checked = false;
@@ -137,12 +136,8 @@ async function pesquisarFilme() {
     }
   });
 
-  btnBuscar.addEventListener("click",  filmesPorBusca)
-
-
+  btnBuscar.addEventListener("click", filmesPorBusca);
 }
-
-
 
 // funções menores
 
@@ -177,6 +172,12 @@ function adicionaRemoveLocalStorage() {
         );
         localStorage.setItem("favoritados", JSON.stringify(favoritados));
         this.src = "./src/image/coracaoVazio.svg";
+        listaFilmes.removeChild(this.parentNode.parentNode.parentNode);
+        if (mostraFavoritados.checked && favoritados.length == 0) {
+          limparSecaoFilmesAoDigitar();
+          tituloPagina.innerText = "Meus filmes favoritos";
+          listaFilmes.appendChild(favoritosVazio());
+        }
       } else {
         //adiciona ao localStorage
         favoritados.push(informacoesFilmeFavoritado);
@@ -224,16 +225,16 @@ function favoritaoOuNao() {
   });
 }
 
-function favoritosVazio(){
-  const aviso = document.createElement("div")
-  aviso.classList.add("hidden")
+function favoritosVazio() {
+  const aviso = document.createElement("div");
+  aviso.classList.add("hidden");
 
   aviso.innerHTML = ` <p>Você não favoritou nenhum filme, use a barra de pesquisa para buscar o filme que deseja favoritar...</p>`;
   return aviso;
 }
 
-
 window.addEventListener("load", () => {
   pesquisarFilme();
   filmesPopulares();
+  mostraListaDeFavoritos();
 });
