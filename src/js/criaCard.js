@@ -172,11 +172,15 @@ function adicionaRemoveLocalStorage() {
         );
         localStorage.setItem("favoritados", JSON.stringify(favoritados));
         this.src = "./src/image/coracaoVazio.svg";
-        listaFilmes.removeChild(this.parentNode.parentNode.parentNode);
+
         if (mostraFavoritados.checked && favoritados.length == 0) {
           limparSecaoFilmesAoDigitar();
           tituloPagina.innerText = "Meus filmes favoritos";
           listaFilmes.appendChild(favoritosVazio());
+        }
+        
+        if(mostraFavoritados.checked){
+          listaFilmes.removeChild(this.parentNode.parentNode.parentNode);
         }
       } else {
         //adiciona ao localStorage
